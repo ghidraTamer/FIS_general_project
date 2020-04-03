@@ -35,15 +35,15 @@ public class Project1 implements  ActionListener{
         panel.add(userLabel);
 
         passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(10, 40, 80, 25);
+        passwordLabel.setBounds(10, 50, 80, 25);
         panel.add(passwordLabel);
 
         userText = new JTextField(20);
-        userText.setBounds(100, 20, 165, 25);
+        userText.setBounds(90, 20, 165, 25);
         panel.add(userText);
 
         passwordText = new JPasswordField(20);
-        passwordText.setBounds(100, 50, 165, 25);
+        passwordText.setBounds(90, 50, 165, 25);
         panel.add(passwordText);
 
         button = new JButton("Login");
@@ -88,11 +88,10 @@ public class Project1 implements  ActionListener{
         LastName = new JTextField(20);
         Phone = new JTextField(20);
 
-        FirstName.setBounds(150,50,70,30);
-        LastName.setBounds(150,100,70,30);
-        Email.setBounds(150,150,70,30);
-        Phone.setBounds(150,200,70,30);
-
+        FirstName.setBounds(120,50,180,30);
+        LastName.setBounds(120,100,180,30);
+        Email.setBounds(120,150,180,30);
+        Phone.setBounds(120,200,180,30);
 
 
         panel2.add(FirstName);
