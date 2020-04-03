@@ -39,14 +39,20 @@ public class SQLiteJDBC {
         try {
             stmt = conn.createStatement();
             stmt.execute(sql);
-            System.out.println("CREATED OPENED");
+            System.out.println("CREATED");
 
             stmt.close();
             conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } finally {
+            try {
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
 
     }
@@ -63,12 +69,16 @@ public class SQLiteJDBC {
             ResultSet rs = stmt.executeQuery(selectData);
 
 
-
-            rs.close();
-            stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,7 +100,13 @@ public class SQLiteJDBC {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } finally {
+            try {
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             }
 
 
