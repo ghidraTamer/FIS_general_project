@@ -41,16 +41,17 @@ public class SQLiteJDBC {
 
     //makes a querry request to the database in search for a specified object in a specified table
     //TO DO : make an enhanged version to select single entries
-    public void selectStatement(String nameDB,String sql_command) throws SQLException, ClassNotFoundException {
+    public String selectStatement(String nameDB,String sql_command) throws SQLException, ClassNotFoundException {
         this.connect(nameDB);
         Statement stmt = null;
-        String[] foundQuerry;
 
         stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql_command);
 
-        stmt.close();
-        conn.close();
+      //  stmt.close();
+       // conn.close();
+
+        return rs.getString(1);
         }
 
 
