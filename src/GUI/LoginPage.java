@@ -28,28 +28,38 @@ public class LoginPage extends JDialog {
                 String userName = usernameField.getText();
                 char[] password = passwordField1.getPassword();
 
-                String sql_select_username = "SELECT username FROM REGISTRATION WHERE username = '" + userName + "'";
+                String sql_username_check = "SELECT CASE WHEN EXISTS (" +
+                        "SELECT username " +
+                        "FROM REGISTRATION " +
+                        "WHERE username = '" + userName + "'" +
+                        ") " +
+                        "THEN CAST(1 AS BIT) " +
+                        "ELSE CAST(0 AS BIT) END ";
+
                 String char_to_string_password = md5.getMd5(String.valueOf(password));
-                String sql_select_password = "SELECT password FROM REGISTRATION WHERE password = '" + char_to_string_password + "'";
 
-                System.out.println(userName);
-                try {
-                   sqlitejdbc.selectStatement("test.db",sql_select_username);
-                   sqlitejdbc.selectStatement("test.db,",sql_select_password);
+                String sql_password_check = "SELECT CASE WHEN EXISTS (" +
+                        "SELECT password " +
+                        "FROM REGISTRATION " +
+                        "WHERE password = '" + char_to_string_password + "'" +
+                        ") " +
+                        "THEN CAST(1 AS BIT) " +
+                        "ELSE CAST(0 AS BIT) END ";
 
-                } catch (SQLException ex) {
-                    //ex.printStackTrace();
-                    System.out.println("ERROR ACCOUNT NOT FOUND");
-                } catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
+                if(sqlitejdbc.selectStatement("test.db",sql_username_check).equals("1") &&
+                sqlitejdbc.selectStatement("test.db",sql_password_check).equals("1")) {
+                    System.out.println("LOGGED IN");
                 }
+
+
 
             }
         });
 
         registerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                RegisterPage rp = new RegisterPage();
+                rp.startRegisterPage();
             }
         });
 

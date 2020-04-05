@@ -1,75 +1,120 @@
 package sqlconnection;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.stream.StreamSupport;
 
 public class SQLiteJDBC {
     private static Connection conn;
 
 
     //connects to the tatabase
-    public static void connect(String nameDB) throws ClassNotFoundException, SQLException {
+    public static void connect(String nameDB) {
 
-
+        try {
             String url = "jdbc:sqlite:" + nameDB;
             Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(url);
-
             System.out.println("CONNECTED");
 
+        } catch(ClassNotFoundException c) {
+            c.printStackTrace();
+        } catch(SQLException s) {
+            s.printStackTrace();
+        }
     }
 
-    public void CreateRegistrationTable() throws SQLException, ClassNotFoundException {
-        this.connect("test.db");
+    public void CreateRegistrationTable() {
+        try {
+            this.connect("test.db");
+            Statement stmt = null;
+            String sql = "CREATE TABLE IF NOT EXISTS REGISTRATION (\n"
+                    + "    id integer PRIMARY KEY,\n"
+                    + "    firstname text NOT NULL,\n"
+                    + "    lastname text NOT NULL,\n"
+                    + "    email text NOT NULL,\n"
+                    + "    username text NOT NULL,\n"
+                    + "    password text NOT NULL\n"
+                    + ");";
 
-        Statement stmt = null;
-        String sql = "CREATE TABLE IF NOT EXISTS REGISTRATION (\n"
-                + "    id integer PRIMARY KEY,\n"
-                + "    firstname text NOT NULL,\n"
-                + "    lastname text NOT NULL,\n"
-                + "    email text NOT NULL,\n"
-                + "    username text NOT NULL,\n"
-                + "    password text NOT NULL\n"
-                + ");";
+            try {
+                stmt = conn.createStatement();
+                stmt.execute(sql);
+                System.out.println("CREATED");
 
-        stmt = conn.createStatement();
-        stmt.execute(sql);
-        System.out.println("CREATED");
-        stmt.close();
-        conn.close();
+            } catch (SQLException s) {
+                s.printStackTrace();
+            } finally {
+               if(stmt != null)
+                    stmt.close();
+                if(conn != null)
+                    conn.close();
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
         }
 
 
     //makes a querry request to the database in search for a specified object in a specified table
     //TO DO : make an enhanged version to select single entries
-    public String selectStatement(String nameDB,String sql_command) throws SQLException, ClassNotFoundException {
-        this.connect(nameDB);
-        Statement stmt = null;
+    public String selectStatement(String nameDB,String sql_command) {
+        try {
+            this.connect(nameDB);
+            Statement stmt = null;
+            ResultSet rs = null;
 
-        stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql_command);
+            try {
 
-      //  stmt.close();
-       // conn.close();
 
-        return rs.getString(1);
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery(sql_command);
+                String result = rs.getString(1);
+
+                return result;
+
+            } catch (SQLException s) {
+                s.printStackTrace();
+
+            } finally {
+                if(stmt != null)
+                    stmt.close();
+                if(rs != null)
+                    rs.close();
+                if(conn != null)
+                    conn.close();
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
         }
 
 
 
     //the insertion is hardcoded
-    public void insertRegistration(String firstname, String lastname, String email, String username, String password) throws SQLException, ClassNotFoundException {
-        this.connect("test.db");
+    public void insertRegistration(String firstname, String lastname, String email, String username, String password) {
+        try {
+            this.connect("test.db");
+            Statement stmt = null;
+            String values = "(" + "'" + firstname + "'" + "," + "'" + lastname + "'" + "," + "'" + email + "'" + "," + "'" + username + "'" + "," + "'" + password + "'" + ")";
+            System.out.println(values);
 
-        Statement stmt = null;
-        String values = "(" + "'" + firstname + "'" + "," + "'" + lastname + "'" + "," + "'" + email + "'" + "," + "'" + username + "'" + "," + "'" + password + "'" + ")";
-        System.out.println(values);
+            try {
+                stmt = conn.createStatement();
+                stmt.executeUpdate("INSERT INTO REGISTRATION(firstname, lastname,email,username,password)" + "VALUES" + values);
+                System.out.println("DATA INSERTED");
+            } catch(SQLException s) {
+                s.printStackTrace();
+            } finally {
+                if(stmt != null)
+                    stmt.close();
+                if(conn != null)
+                    conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        stmt = conn.createStatement();
-        stmt.executeUpdate("INSERT INTO REGISTRATION(firstname, lastname,email,username,password)" + "VALUES" + values);
-        System.out.println("DATA INSERTED");
-
-        stmt.close();
-        conn.close();
 
         }
 
